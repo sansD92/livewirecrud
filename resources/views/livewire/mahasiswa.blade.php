@@ -54,6 +54,29 @@
                 </div>
             </div>
             <div class="mb-3 row">
+                <label for="alamat" class="col-sm-2 col-form-label">Jurusan</label>
+                <div class="col-sm-10">
+                    <select class="form-select" aria-label="Default select example" wire:model="id_jurusan">
+                        <option selected>Pilih Jurusan</option>
+                        @foreach ($jurusan as $data)
+                        <option value="{{$data->id}}">{{$data->nama_jurusan}}</option>
+                        @endforeach
+                        
+                      </select>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="alamat" class="col-sm-2 col-form-label">Status</label>
+                <div class="col-sm-10">
+                    <select class="form-select" aria-label="Default select example" wire:model="status">
+                        <option selected>Status Kelulusan</option>
+                        <option value="BELUM" selected>BELUM</option>
+                        <option value="LULUS">LULUS</option>
+                        
+                      </select>
+                </div>
+            </div>
+            <div class="mb-3 row">
                 <label class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     @if ($updateData == false)
@@ -74,9 +97,9 @@
     <div class="my-3 p-3 bg-body rounded shadow-sm table-responsive">
         <h1>Data Mahasiswa</h1>
        <div class="pb-3 pt-3">
-        <input type="search" class="form-control mb-3 w-25" placeholder="search..." wire:model.live="katakunci">
+        <input type="text" class="form-control mb-3 w-25" placeholder="search..." wire:model.live="katakunci">
        </div>
-        <table id="example" class="table table-light table-striped">
+        <table id="example" class="table table-light table-striped responsive" style="width:100%">
             <div class="px-1 col-sm-1">
                 <label class="text-sm">Per Page</label>
          
@@ -95,6 +118,8 @@
                     <th class="col-md-2">Email</th>
                     <th class="col-md-2">No Hp</th>
                     <th class="col-md-2">Alamat</th>
+                    <th class="col-md-2">Jurusan</th>
+                    <th class="col-md-2">Status LULUS</th>
                     <th class="col-md-2">Aksi</th>
                 </tr>
             </thead>
@@ -111,6 +136,8 @@
                     <td>{{$data->email;}}</td>
                     <td>{{$data->nohp;}}</td>
                     <td>{{$data->alamat;}}</td>
+                    <td>{{$data->jurusan->nama_jurusan;}}</td>
+                    <td>{{$data->status;}}</td>
                     <td>
                         <a wire:click="edit({{$data->id}})" class="btn btn-warning btn-sm">Edit</a>
                         <button wire:click="delete_confrimation({{$data->id}})" class="btn btn-danger btn-sm" 

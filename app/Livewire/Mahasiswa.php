@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Models\Jurusan;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\Jurusan as ModelsJurusan;
 use App\Models\Mahasiswa as ModelsMahasiswa;
 
 class Mahasiswa extends Component
@@ -15,10 +17,13 @@ class Mahasiswa extends Component
    public $alamat;
    public $email;
    public $nohp;
+   public $status;
+   public $id_jurusan;
    public $updateData = false;
    public $mahasiswa_id;
    public $perPage = 3;
    public $katakunci;
+   public $datajurusan;
 
    public function store() {
         
@@ -28,6 +33,8 @@ class Mahasiswa extends Component
         'email' => 'required|email',
         'nohp' => 'required',
         'alamat' => 'required',
+        'id_jurusan' => 'required',
+        'status' => 'required',
     ];
 
     $pesan = [
@@ -37,11 +44,14 @@ class Mahasiswa extends Component
         'email.email'=>'Format Email tidak sesuai',
         'nohp.required'=>'No HP Wajib Diisi',
         'alamat.required'=>'Alamat Wajib Diisi',
+        'id_jurusan.required'=>'Jurusan Wajib Diisi',
+        'status.required'=>'Status Kelulusan Wajib Diisi',
     ];
 
     $validated = $this->validate($rules, $pesan);
 
     ModelsMahasiswa::create($validated);
+    
     session()->flash('message', 'Data atas nama '.$this->nama.' Berhasil Ditambahkan');
     $this->clear();
 }
@@ -53,6 +63,8 @@ class Mahasiswa extends Component
     $this->email = '';
     $this->nohp = '';
     $this->alamat = '';
+    $this->id_jurusan = '';
+    $this->status = '';
 
     $this->updateData = false;
     $this->mahasiswa_id = '';
@@ -65,6 +77,8 @@ class Mahasiswa extends Component
         $this->email = $dataMahasiswa->email;
         $this->nohp = $dataMahasiswa->nohp;
         $this->alamat = $dataMahasiswa->alamat;
+        $this->id_jurusan = $dataMahasiswa->id_jurusan;
+        $this->status = $dataMahasiswa->status;
 
         $this->updateData = true;
         $this->mahasiswa_id = $id;
@@ -77,6 +91,8 @@ class Mahasiswa extends Component
             'email' => 'required|email',
             'nohp' => 'required',
             'alamat' => 'required',
+            'id_jurusan' => 'required',
+            'status' => 'required',
         ];
     
         $pesan = [
@@ -86,6 +102,8 @@ class Mahasiswa extends Component
             'email.email'=>'Format Email tidak sesuai',
             'nohp.required'=>'No HP Wajib Diisi',
             'alamat.required'=>'Alamat Wajib Diisi',
+            'id_jurusan.required'=>'Jurusan Wajib Diisi',
+             'status.required'=>'Status Kelulusan Wajib Diisi',
         ];
     
         $validated = $this->validate($rules, $pesan);
@@ -114,19 +132,24 @@ class Mahasiswa extends Component
 
     public function render()
     {
-
+        $datajurusan = ModelsJurusan::all();
         if ($this->katakunci != null) {
-            $dataMahasiswa = ModelsMahasiswa::where('nama','like','%'.$this->katakunci.'%')
+            $dataMahasiswa = ModelsMahasiswa::with('jurusan')->where('id','like','%'.$this->katakunci.'%')
             ->orwhere('email','like','%'.$this->katakunci.'%')->
             orwhere('nohp','like','%'.$this->katakunci.'%')->
             orwhere('alamat','like','%'.$this->katakunci.'%')->
             orwhere('nip','like','%'.$this->katakunci.'%')->
-            orderBy('nama','asc')->paginate($this->perPage);
-        } else {
-            $dataMahasiswa = ModelsMahasiswa::orderBy('id','desc')->paginate($this->perPage);
+            orwhere('status','like','%'.$this->katakunci.'%')->
+            orderBy('id','asc')->paginate($this->perPage);
+            
+            
+      }else {
+            $dataMahasiswa = ModelsMahasiswa::with('jurusan')->orderBy('id','desc')->paginate($this->perPage);
         }
         
-        return view('livewire.mahasiswa',compact('dataMahasiswa'));
+        return view('livewire.mahasiswa',compact('dataMahasiswa'), [
+            'jurusan' => ModelsJurusan::all(),
+        ]);
     }
 
   
