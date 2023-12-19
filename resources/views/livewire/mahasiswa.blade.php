@@ -97,7 +97,7 @@
     <div class="my-3 p-3 bg-body rounded shadow-sm table-responsive">
         <h1>Data Mahasiswa</h1>
        <div class="pb-3 pt-3">
-        <input type="text" class="form-control mb-3 w-25" placeholder="search..." wire:model.live="katakunci">
+        <input type="text" class="form-control mb-3 w-25" placeholder="search..." wire:model.live="search">
        </div>
         <table id="example" class="table table-light table-striped responsive" style="width:100%">
             <div class="px-1 col-sm-1">

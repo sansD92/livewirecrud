@@ -24,6 +24,7 @@ class Mahasiswa extends Component
    public $perPage = 3;
    public $katakunci;
    public $datajurusan;
+   public $search = '';
 
    public function store() {
         
@@ -65,7 +66,7 @@ class Mahasiswa extends Component
     $this->alamat = '';
     $this->id_jurusan = '';
     $this->status = '';
-
+        
     $this->updateData = false;
     $this->mahasiswa_id = '';
     }
@@ -145,12 +146,13 @@ class Mahasiswa extends Component
             
       }else {
             $dataMahasiswa = ModelsMahasiswa::with('jurusan')->orderBy('id','desc')->paginate($this->perPage);
-        }
+            // $dataMahasiswa = ModelsMahasiswa::search($this->search)->with('jurusan')->orderBy('id','desc')->paginate($this->perPage);
+        // }
         
         return view('livewire.mahasiswa',compact('dataMahasiswa'), [
             'jurusan' => ModelsJurusan::all(),
         ]);
     }
-
+    }
   
 }
